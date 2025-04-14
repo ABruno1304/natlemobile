@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Natle by initbe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+
+    h1 {
+      font-size: 28px;
+    }
+
+    #instructions {
+      font-size: 16px;
+      margin: 10px auto 20px;
+      max-width: 600px;
+      line-height: 1.6;
+      text-align: left;
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    #gameContainer {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    #wordDisplay {
+      font-size: 24px;
+      letter-spacing: 6px;
+      margin: 20px 0;
+      word-wrap: break-word;
+    }
+
+    .alphabet-button {
+      margin: 5px;
+      padding: 12px;
+      font-size: 20px;
+      border: none;
+      border-radius: 8px;
+      background-color: #e0e0e0;
+      transition: background-color 0.3s;
+      width: 40px;
+    }
+
+    .used-wrong {
+      background-color: #f44336 !important; /* Red */
+      color: white;
+    }
+
+    .used-correct {
+      background-color: #4caf50 !important; /* Green */
+      color: white;
+    }
+
+    .hearts {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    #message {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    #endScreen {
+      display: none;
+      background-color: rgba(255, 255, 255, 0.95);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
