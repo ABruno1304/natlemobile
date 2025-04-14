@@ -25,12 +25,6 @@
       max-width: 600px;
       margin-left: auto;
       margin-right: auto;
-      text-align: center;
-    }
-
-    .instructions ol {
-      padding-left: 20px;
-      text-align: left;
     }
 
     #lives {
@@ -98,11 +92,6 @@
 
       #word {
         font-size: 24px;
-      }
-
-      .instructions {
-        text-align: left;
-        padding: 0 10px;
       }
     }
 
@@ -188,3 +177,49 @@
         const letter = String.fromCharCode(i);
         const button = document.createElement("button");
         button.textContent = letter;
+        button.className = "key";
+        button.onclick = () => handleGuess(letter, button);
+        keyboard.appendChild(button);
+      }
+    }
+
+    function handleGuess(letter, button) {
+      if (chosenCountry.includes(letter)) {
+        for (let i = 0; i < chosenCountry.length; i++) {
+          if (chosenCountry[i] === letter) {
+            revealed[i] = letter;
+          }
+        }
+        button.classList.add("correct");
+      } else {
+        lives--;
+        updateLives();
+        button.classList.add("wrong");
+      }
+
+      button.disabled = true;
+      renderWord();
+      checkGameStatus();
+    }
+
+    function checkGameStatus() {
+      if (!revealed.includes('_')) {
+        document.getElementById("message").textContent = `🎉 You Win! The country was ${chosenCountry}`;
+        document.getElementById("nextBtn").style.display = "inline-block";
+        disableKeyboard();
+      } else if (lives === 0) {
+        document.getElementById("message").textContent = `❌ You Lost! The country was ${chosenCountry}`;
+        document.getElementById("nextBtn").style.display = "inline-block";
+        disableKeyboard();
+      }
+    }
+
+    function disableKeyboard() {
+      const buttons = document.querySelectorAll(".key");
+      buttons.forEach(btn => btn.disabled = true);
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
