@@ -7,216 +7,237 @@
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
       text-align: center;
-      background: #f4f4f4;
-      margin: 0;
       padding: 20px;
     }
 
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
     h1 {
-      font-size: 32px;
-      margin-bottom: 10px;
+      font-size: 2em;
+      margin-bottom: 0.2em;
     }
 
     .instructions {
-      margin-bottom: 20px;
-      font-size: 16px;
-      line-height: 1.5;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    #lives {
-      font-size: 28px;
-      margin: 20px 0;
-    }
-
-    #word {
-      font-size: 32px;
-      letter-spacing: 12px;
-      margin: 20px;
-      word-break: break-word;
-      text-transform: uppercase;
-    }
-
-    #keyboard {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
-      gap: 5px;
-      max-width: 400px;
-      margin: 20px auto;
-    }
-
-    .key {
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      background: #ddd;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .key.correct {
-      background-color: green;
-      color: white;
-    }
-
-    .key.wrong {
-      background-color: red;
-      color: white;
-    }
-
-    #message {
-      font-size: 24px;
-      margin: 20px;
-      font-weight: bold;
-    }
-
-    #nextBtn {
-      display: none;
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #333;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+      text-align: left;
+      margin: 0 auto 20px auto;
+      font-size: 20px;
     }
 
     @media (max-width: 600px) {
-      .key {
+      .instructions {
         font-size: 14px;
-        padding: 8px;
-      }
-
-      #word {
-        font-size: 24px;
+        text-align: center;
       }
     }
 
-    @media (min-width: 601px) {
-      .key {
-        font-size: 20px;
-        padding: 12px;
+    .hearts {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin: 15px 0;
+    }
+
+    .heart {
+      font-size: 2em;
+      color: red;
+    }
+
+    .word-container {
+      margin: 20px 0;
+      font-size: 2em;
+      letter-spacing: 10px;
+      text-transform: uppercase;
+    }
+
+    .letter-button {
+      padding: 10px 15px;
+      margin: 5px;
+      font-size: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: white;
+      transition: 0.2s;
+    }
+
+    @media (max-width: 600px) {
+      .letter-button {
+        font-size: 14px;
+        padding: 8px 12px;
       }
     }
+
+    .letter-button.correct {
+      background-color: #d4edda;
+      color: green;
+      border-color: green;
+    }
+
+    .letter-button.wrong {
+      background-color: #f8d7da;
+      color: red;
+      border-color: red;
+    }
+
+    .end-message {
+      font-size: 1.5em;
+      margin: 20px 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .play-again {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
   </style>
 </head>
 <body>
-  <h1>Natle by Initbe</h1>
-  <div class="instructions">
+  <div class="container">
+    <h1>Natle by Initbe</h1>
     <p>Welcome to Natle! 🎯</p>
-    <ol>
-      <li>This game is about finding the hidden country.</li>
-      <li>Click the correct letters to guess the country's name.</li>
-      <li>Correct letters turn <strong>green</strong>, wrong ones turn <strong>red</strong>.</li>
-      <li>You have 7 ❤️s. One heart disappears for each wrong guess.</li>
-    </ol>
+    <div class="instructions">
+      <ol>
+        <li>This game is about finding the hidden country.</li>
+        <li>Click the correct letters to guess the country's name.</li>
+        <li>Correct letters turn <strong style="color:green;">green</strong>, wrong ones turn <strong style="color:red;">red</strong>.</li>
+        <li>You have 7 <span class="heart">❤️</span>s. One heart disappears for each wrong guess.</li>
+      </ol>
+    </div>
+
+    <div class="hearts" id="hearts"></div>
+
+    <div class="word-container" id="wordContainer"></div>
+
+    <div id="alphabetButtons"></div>
+
+    <div class="end-message hidden" id="endMessage"></div>
+    <button class="play-again hidden" id="playAgainBtn" onclick="startGame()">Play Again</button>
   </div>
-  <div id="lives">❤️❤️❤️❤️❤️❤️❤️</div>
-  <div id="word"></div>
-  <div id="keyboard"></div>
-  <div id="message"></div>
-  <button id="nextBtn" onclick="startGame()">Next Game</button>
 
   <script>
     const countries = [
-      "Afghanistan","Albania","Algeria","Andorra","Angola","Argentina","Armenia","Australia","Austria","Azerbaijan",
-      "Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia",
-      "Bosnia","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia","Cameroon",
-      "Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo","Costa Rica","Croatia",
-      "Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador",
-      "Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia",
-      "Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti",
-      "Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy",
-      "Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Latvia",
-      "Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia",
-      "Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco",
-      "Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand",
-      "Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine",
-      "Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia",
-      "Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent","Samoa","San Marino","Sao Tome","Saudi Arabia","Senegal","Serbia",
-      "Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan",
-      "Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania",
-      "Thailand","Timor-Leste","Togo","Tonga","Trinidad","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda",
-      "Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam",
-      "Yemen","Zambia","Zimbabwe"
+      "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia",
+      "Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium",
+      "Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria",
+      "Burkina Faso","Burundi","Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic",
+      "Chad","Chile","China","Colombia","Comoros","Congo (Congo-Brazzaville)","Costa Rica","Croatia",
+      "Cuba","Cyprus","Czechia","Democratic Republic of the Congo","Denmark","Djibouti","Dominica",
+      "Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia",
+      "Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana",
+      "Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary",
+      "Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Ivory Coast","Jamaica",
+      "Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon",
+      "Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi",
+      "Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico",
+      "Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar",
+      "Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria",
+      "North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine State","Panama",
+      "Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania",
+      "Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines",
+      "Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles",
+      "Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa",
+      "South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland",
+      "Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago",
+      "Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates",
+      "United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City",
+      "Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"
     ];
 
-    let chosenCountry = "";
-    let revealed = [];
+    let selectedCountry = '';
+    let displayedWord = [];
     let lives = 7;
 
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
     function startGame() {
-      document.getElementById("message").textContent = "";
-      document.getElementById("nextBtn").style.display = "none";
+      // Reset
+      document.getElementById('endMessage').classList.add('hidden');
+      document.getElementById('playAgainBtn').classList.add('hidden');
       lives = 7;
-      updateLives();
 
-      const shuffled = countries.sort(() => 0.5 - Math.random());
-      chosenCountry = shuffled[0].toUpperCase();
-      revealed = Array.from(chosenCountry).map(char => (char === ' ' ? ' ' : '_'));
-      renderWord();
-      renderKeyboard();
+      // Pick random country
+      shuffleArray(countries);
+      selectedCountry = countries[0].toUpperCase();
+      displayedWord = selectedCountry.split('').map(c => (c === ' ' ? ' ' : '_'));
+      updateWordDisplay();
+      updateHearts();
+      createAlphabetButtons();
     }
 
-    function updateLives() {
-      document.getElementById("lives").textContent = "❤️".repeat(lives);
+    function updateWordDisplay() {
+      document.getElementById('wordContainer').textContent = displayedWord.join(' ');
     }
 
-    function renderWord() {
-      document.getElementById("word").textContent = revealed.join(" ");
+    function updateHearts() {
+      const heartContainer = document.getElementById('hearts');
+      heartContainer.innerHTML = '';
+      for (let i = 0; i < lives; i++) {
+        const heart = document.createElement('span');
+        heart.classList.add('heart');
+        heart.textContent = '❤️';
+        heartContainer.appendChild(heart);
+      }
     }
 
-    function renderKeyboard() {
-      const keyboard = document.getElementById("keyboard");
-      keyboard.innerHTML = "";
-
+    function createAlphabetButtons() {
+      const container = document.getElementById('alphabetButtons');
+      container.innerHTML = '';
       for (let i = 65; i <= 90; i++) {
         const letter = String.fromCharCode(i);
-        const button = document.createElement("button");
-        button.textContent = letter;
-        button.className = "key";
-        button.onclick = () => handleGuess(letter, button);
-        keyboard.appendChild(button);
+        const btn = document.createElement('button');
+        btn.className = 'letter-button';
+        btn.textContent = letter;
+        btn.onclick = () => handleGuess(letter, btn);
+        container.appendChild(btn);
       }
     }
 
     function handleGuess(letter, button) {
-      if (chosenCountry.includes(letter)) {
-        for (let i = 0; i < chosenCountry.length; i++) {
-          if (chosenCountry[i] === letter) {
-            revealed[i] = letter;
-          }
-        }
-        button.classList.add("correct");
-      } else {
-        lives--;
-        updateLives();
-        button.classList.add("wrong");
-      }
-
       button.disabled = true;
-      renderWord();
-      checkGameStatus();
-    }
-
-    function checkGameStatus() {
-      if (!revealed.includes('_')) {
-        document.getElementById("message").textContent = `🎉 You Win! The country was ${chosenCountry}`;
-        document.getElementById("nextBtn").style.display = "inline-block";
-        disableKeyboard();
-      } else if (lives === 0) {
-        document.getElementById("message").textContent = `❌ You Lost! The country was ${chosenCountry}`;
-        document.getElementById("nextBtn").style.display = "inline-block";
-        disableKeyboard();
+      if (selectedCountry.includes(letter)) {
+        button.classList.add('correct');
+        selectedCountry.split('').forEach((char, index) => {
+          if (char === letter) displayedWord[index] = letter;
+        });
+        updateWordDisplay();
+        if (!displayedWord.includes('_')) {
+          endGame(true);
+        }
+      } else {
+        button.classList.add('wrong');
+        lives--;
+        updateHearts();
+        if (lives === 0) {
+          endGame(false);
+        }
       }
     }
 
-    function disableKeyboard() {
-      const buttons = document.querySelectorAll(".key");
-      buttons.forEach(btn => btn.disabled = true);
+    function endGame(won) {
+      const msg = document.getElementById('endMessage');
+      msg.classList.remove('hidden');
+      msg.textContent = won ? `🎉 You win! The country was: ${selectedCountry}` : `😢 You lost! The country was: ${selectedCountry}`;
+      document.getElementById('playAgainBtn').classList.remove('hidden');
     }
 
     startGame();
